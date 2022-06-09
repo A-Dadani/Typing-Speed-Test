@@ -15,7 +15,8 @@
 int main()
 {
 	size_t textLength;
-	std::cout << "Number of words? (Max: " << MAX_TEXT_SIZE << ") : "; std::cin >> textLength;
+	std::cout << "Number of words? (Max: " << MAX_TEXT_SIZE << ") : ";
+	std::cin >> textLength;
 	textLength = std::min(textLength, (size_t)MAX_TEXT_SIZE);
 
 	std::string Text;
@@ -66,17 +67,34 @@ int main()
 	std::cout << std::endl;
 
 	std::chrono::steady_clock::time_point startTime;
+	bool needsReset = true;
+	bool isClockSet = false;
 
-	for (auto it = Text.begin(); it != Text.end(); ++it) //No const correctness I'm lazy
+	for (std::string::iterator it = Text.begin(); it != Text.end(); ++it) //No const correctness I'm lazy
 	{
+		if (needsReset)
+		{
+			it = Text.begin();
+			needsReset = false;
+		}
 		char input = _getch();
-		if (it == Text.begin()) startTime = std::chrono::steady_clock::now();
+		if (it == Text.begin() && !isClockSet)
+		{
+			startTime = std::chrono::steady_clock::now();
+			isClockSet = true;
+		}
 		//Check for backspaces
 		if (input == 8) //ASCII for a backspace is 8
 		{
+			if (it == Text.begin())
+			{
+				needsReset = true;
+				continue;
+			}
 			std::cout << "\b \b";
 			InputString.pop_back();
-			it -= 2; //Stepping the iterator back twice because backspace is still a char
+			if (it == Text.begin() + 1) needsReset = true;
+			else it -= 2; //Stepping the iterator back twice because backspace is still a char
 		}
 		else
 		{
