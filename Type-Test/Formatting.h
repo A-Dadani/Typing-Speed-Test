@@ -25,13 +25,49 @@ namespace Out
 		std::cout << s;
 		if (space) std::cout << " ";
 		if (ret) std::cout << std::endl;
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 
-	void PrintBlue(std::string s, bool space = true, bool ret = false)
+	void PrintYellow(std::string s, bool space = true, bool ret = false)
 	{
-		SetConsoleTextAttribute(hStdOut, FOREGROUND_BLUE);
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED|FOREGROUND_GREEN);
 		std::cout << s;
 		if (space) std::cout << " ";
 		if (ret) std::cout << std::endl;
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	}
+
+	void PrintWhite(char c, bool space = true, bool ret = false)
+	{
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		std::cout << c;
+		if (space) std::cout << " ";
+		if (ret) std::cout << std::endl;
+	}
+
+	void PrintRed(char c, bool space = true, bool ret = false)
+	{
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED);
+		std::cout << c;
+		if (space) std::cout << " ";
+		if (ret) std::cout << std::endl;
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	}
+
+	void PrintYellow(char c, bool space = true, bool ret = false)
+	{
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN);
+		std::cout << c;
+		if (space) std::cout << " ";
+		if (ret) std::cout << std::endl;
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	}
+
+	void PrintRedSpace()
+	{
+		SetConsoleTextAttribute(hStdOut, BACKGROUND_RED);
+		std::cout << " ";
+		SetConsoleTextAttribute(hStdOut, 0); //Go back to black background
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 }
