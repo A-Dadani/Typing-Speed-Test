@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <random>
+#include <chrono>
 #include <conio.h>
 #include "Formatting.h"
 
@@ -63,9 +64,12 @@ int main()
 	Out::PrintYellow(Text, false);
 	std::cout << std::endl;
 
+	std::chrono::steady_clock::time_point startTime;
+
 	for (auto it = Text.begin(); it != Text.end(); ++it) //No const correctness I'm lazy
 	{
 		char input = _getch();
+		if (it == Text.begin()) startTime = std::chrono::steady_clock::now();
 		//Check for backspaces
 		if (input == 8)
 		{
@@ -78,6 +82,15 @@ int main()
 		else Out::PrintRed(input, false); //Some other wrong character
 	}
 
+	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
+	auto durationmS = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
+	auto durationS = durationmS / 1000000.;
+	auto durationM = durationS / 60.; 
 	SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	unsigned long long charCount = Text.end() - Text.begin();
+	long double wordCount = charCount / 5.L;
+	std::cout << "\nYou took " << durationS << " seconds\n";
+	std::cout << "To type " << charCount << " characters\n";
+	std::cout << "That's a speed of " << wordCount / durationM << " WPM";
 	return 0;
 }
