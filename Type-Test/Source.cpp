@@ -2,16 +2,15 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-#include <cstring>
 #include <fstream>
-#include <cstdlib>
+#include <cstddef>
 #include <random>
 #include <chrono>
 #include <conio.h>
-#include "Formatting.h"
+#include "Misc.h"
 
-#define MAX_TEXT_SIZE 25
-#define NUMBER_WORDS_TOTAL 100 //Number of words in our words list
+#define MAX_TEXT_SIZE 50
+#define NUMBER_WORDS_TOTAL 1000 //Number of words in our words list
 
 int main()
 {
@@ -20,6 +19,7 @@ int main()
 	textLength = std::min(textLength, (size_t)MAX_TEXT_SIZE);
 
 	std::string Text;
+	std::string InputString;
 	std::ifstream in("Words.txt");
 	std::vector<size_t> indices;
 	indices.resize(textLength);
@@ -61,6 +61,7 @@ int main()
 		}
 	}
 
+	Text.pop_back(); //Remove the last space
 	Out::PrintYellow(Text, false);
 	std::cout << std::endl;
 
@@ -71,26 +72,38 @@ int main()
 		char input = _getch();
 		if (it == Text.begin()) startTime = std::chrono::steady_clock::now();
 		//Check for backspaces
-		if (input == 8)
+		if (input == 8) //ASCII for a backspace is 8
 		{
-			std::cout << "\b \b"; //ASCII for a backspace is 8
+			std::cout << "\b \b";
+			InputString.pop_back();
 			it -= 2; //Stepping the iterator back twice because backspace is still a char
 		}
-		else if (input == *it) Out::PrintWhite(input, false);
-		else if (input == ' ') Out::PrintRedSpace(); //Wrong character but it's a space so 
-													//needs to be treated differently
-		else Out::PrintRed(input, false); //Some other wrong character
+		else
+		{
+			InputString += input;
+			if (input == *it) Out::PrintWhite(input, false);
+			else if (input == ' ') Out::PrintRedSpace(); //Wrong character but it's a space so 
+														//needs to be treated differently
+			else Out::PrintRed(input, false); //Some other wrong character
+		}
 	}
 
 	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
 	auto durationmS = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count();
 	auto durationS = durationmS / 1000000.;
-	auto durationM = durationS / 60.; 
+	auto durationM = durationS / 60.;
 	SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	unsigned long long charCount = Text.end() - Text.begin();
 	long double wordCount = charCount / 5.L;
+	size_t nMistakes = Utility::nDifferences(Text, InputString);
+	float accuracy = 1 - ((float)nMistakes / charCount);
 	std::cout << "\nYou took " << durationS << " seconds\n";
-	std::cout << "To type " << charCount << " characters\n";
-	std::cout << "That's a speed of " << wordCount / durationM << " WPM";
+	std::cout << "You typed " << charCount << " characters ";
+	std::cout << "with " << nMistakes << " mistakes\n";
+	std::cout << "That's an accuracy of " << accuracy * 100 << "%\n";
+	std::cout << "And a speed of " << (wordCount / durationM) * accuracy << " WPM\n";
+	std::cout << "Raw WPM is: " << (wordCount / durationM) << " WPM\n";
+	std::cout << "Press any key to exit";
+	while (!_kbhit());
 	return 0;
 }

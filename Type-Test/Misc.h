@@ -3,6 +3,7 @@
 #define NOMINMAX
 #include <iostream>
 #include <string>
+#include <cstddef>
 #include <windows.h>
 
 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -69,5 +70,19 @@ namespace Out
 		std::cout << " ";
 		SetConsoleTextAttribute(hStdOut, 0); //Go back to black background
 		SetConsoleTextAttribute(hStdOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	}
+}
+
+namespace Utility
+{
+	size_t nDifferences(std::string str0, std::string str1)
+	{
+		//!!Need to be the same size for this to work!!
+		size_t ctr = 0;
+		for (size_t i = 0; i < str0.size(); ++i)
+		{
+			if (str0[i] != str1[i]) ++ctr;
+		}
+		return ctr;
 	}
 }
