@@ -10,7 +10,7 @@
 #include "Misc.h"
 
 #define MAX_TEXT_SIZE 50
-#define NUMBER_WORDS_TOTAL 1000 //Number of words in our words list
+#define NUMBER_WORDS_TOTAL 999 //Number of words in the words list
 
 int main()
 {
